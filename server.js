@@ -9,10 +9,10 @@ const { verify } = require("crypto");
 const path = require('path');
 
 app.use(express.static(path.join(__dirname, 'public')));
-
+app.set('views', __dirname + '/views');
 // Set view engine to EJS
 app.set('view engine', 'ejs');
-
+app.use(express.static(__dirname + '/public'));
 // const verifyToken = async (req, res, next) => {
 //   try {
 //     const idToken = req.headers.authorization?.split("Bearer ")[1];

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lost and Found - Report Item</title>
+    <link href="/dist/styles.css" rel="stylesheet">
+    <script>
+        async function handleSubmit(event) {
+            event.preventDefault();
+
+            const formData = {
+                type: document.getElementById("type").value,
+                title: document.getElementById("title").value,
+                description: document.getElementById("description").value,
+                location: document.getElementById("location").value,
+                contact_info: {
+                    email: document.getElementById("email").value,
+                    phone: document.getElementById("phone").value,
+                },
+                status: "open",
+                brand: document.getElementById("brand").value,
+                color: document.getElementById("color").value,
+            };
+
+            try {
+                const response = await fetch('/items', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData),
+                });
+
+                if (response.ok) {
+                    const data = await response.json();  // Capture the response body
+                const caseId = data.id;  // Get the randomId (caseId) from the response
+                // Redirect to the confirmation page with the case ID
+                    window.location.href = `/confirm/${caseId}`;                
+                }
+                     else {
+                    alert("Failed to report the lost item. Please try again.");
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert("An error occurred while reporting the lost item.");
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-gray-100">
+    <div class="isolate bg-white px-6 py-24 sm:py-32 lg:px-8">
+
+
+        <%- include('partials/navbar') %>
+
+
+
+
+
+
+        <div class="absolute inset-x-0 top-[-10rem] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[-20rem]" aria-hidden="true">
+            <div class="relative left-1/2 -z-10 aspect-[1155/678] w-[36.125rem] max-w-none -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%-40rem)] sm:w-[72.1875rem]" style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"></div>
+        </div>
+        <div class="mx-auto max-w-2xl text-center">
+            <h2 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">Report Lost Item</h2>
+            <p class="mt-2 text-lg text-gray-600">Fill out the form below to report your lost item.</p>
+        </div>
+        <form onsubmit="handleSubmit(event)" class="mx-auto mt-16 max-w-xl sm:mt-20">
+            <div class="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
+                <div>
+                    <label for="type" class="block text-sm font-bold text-gray-900">Item Type</label>
+                    <div class="mt-2.5">
+                        <input type="text" id="type" name="type" class="block w-full rounded-md bg-white px-3.5 py-2 text-gray-900 outline outline-1 outline-gray-300" required>
+                    </div>
+                </div>
+
+                
+                <div>
+                    <label for="title" class="block text-sm font-bold text-gray-900">Title</label>
+                    <div class="mt-2.5">
+                        <select id="title" name="title" class="block w-full rounded-md bg-white px-3.5 py-2 text-gray-900 outline outline-1 outline-gray-300" required disabled>
+                            <option value="lost" <%= route === '/report-lost' ? 'selected' : '' %>>Lost</option>
+                            <option value="found" <%= route === '/report-found' ? 'selected' : '' %>>Found</option>
+                        </select>
+                    </div>
+                </div>
+                
+
+
+                
+                <div class="sm:col-span-2">
+                    <label for="description" class="block text-sm font-bold text-gray-900">Description</label>
+                    <div class="mt-2.5">
+                        <textarea id="description" name="description" rows="4" class="block w-full rounded-md bg-white px-3.5 py-2 text-gray-900 outline outline-1 outline-gray-300" required></textarea>
+                    </div>
+                </div>
+                <div class="sm:col-span-2">
+                    <label for="location" class="block text-sm font-bold text-gray-900">Location</label>
+                    <div class="mt-2.5">
+                        <input type="text" id="location" name="location" class="block w-full rounded-md bg-white px-3.5 py-2 text-gray-900 outline outline-1 outline-gray-300" required>
+                    </div>
+                </div>
+                <div>
+                    <label for="brand" class="block text-sm font-bold text-gray-900">Brand</label>
+                    <div class="mt-2.5">
+                        <input type="text" id="brand" name="brand" class="block w-full rounded-md bg-white px-3.5 py-2 text-gray-900 outline outline-1 outline-gray-300">
+                    </div>
+                </div>
+                <div>
+                    <label for="color" class="block text-sm font-bold text-gray-900">Color</label>
+                    <div class="mt-2.5">
+                        <input type="text" id="color" name="color" class="block w-full rounded-md bg-white px-3.5 py-2 text-gray-900 outline outline-1 outline-gray-300">
+                    </div>
+                </div>
+                <div>
+                    <label for="email" class="block text-sm font-bold text-gray-900">Email</label>
+                    <div class="mt-2.5">
+                        <input type="email" id="email" name="email" class="block w-full rounded-md bg-white px-3.5 py-2 text-gray-900 outline outline-1 outline-gray-300" required>
+                    </div>
+                </div>
+                <div>
+                    <label for="phone" class="block text-sm font-bold text-gray-900">Phone</label>
+                    <div class="mt-2.5">
+                        <div class="flex rounded-md bg-white outline outline-1 outline-gray-300">
+                            <div class="grid shrink-0 grid-cols-1">
+                                <select id="country" name="country" class="col-start-1 row-start-1 w-full appearance-none rounded-md py-2 pl-3.5 pr-7 bg-white text-gray-500">
+                                    <option>+1</option>
+                                    <option>+91</option>
+                                    <option>+44</option>
+                                    <option>+61</option>
+                                </select>
+                            </div>
+                            <input type="tel" id="phone" name="phone" placeholder="123-456-7890" class="block min-w-0 grow py-2 pl-1 bg-white text-gray-900">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-10">
+                <button type="submit" class="block w-full rounded-md bg-indigo-600 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500">Submit</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
